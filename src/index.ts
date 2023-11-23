@@ -3,7 +3,8 @@ import express from 'express';
 
 const app = express();
 
-import indexRoutes from './routes/index';
+import userRoutes from './routes/usuario.routes';
+import pedidoRoutes from './routes/pedido.routes';
 
 //middlewares
 app.use(express.json());
@@ -11,7 +12,7 @@ app.use(express.urlencoded({extended: false}));
 
 
 //routes
-app.use(indexRoutes);
+app.use(userRoutes, pedidoRoutes);
 
 app.listen(4000);
 console.log('Server on port', 4000);

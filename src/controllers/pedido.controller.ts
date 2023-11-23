@@ -1,76 +1,7 @@
 import { Request, Response } from "express";
 import { QueryResult } from "pg";
 
-import { pool } from "../database";
-
-//CRUD USUARIOS
-export const createUser = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
-    try {
-        const { nombre, apellido, email } = req.body;
-        const response = await pool.query(
-            "INSERT INTO usuario (nombre, apellido, email) VALUES ($1, $2, $3)",
-            [nombre, apellido, email]
-        );
-        return res.json({
-            message: "User created successfully",
-            body: {
-                user: {
-                    nombre,
-                    apellido,
-                    email,
-                },
-            },
-        });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json("Internal Server error...");
-    }
-};
-
-export const deleteUser = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
-    try {
-        const id = parseInt(req.params.id);
-        await pool.query("DELETE FROM usuario where id_usuario = $1", [id]);
-        return res.json(`User ${id} deleted Successfully`);
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json("Internal Server error...");
-    }
-};
-
-export const getUsers = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
-    try {
-        const response = await pool.query("SELECT * FROM usuario");
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json("Internal Server error...");
-    }
-};
-
-export const updateUser = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
-    const id = parseInt(req.params.id);
-    const { nombre, apellido, email } = req.body;
-
-    const response = await pool.query(
-        "UPDATE usuario SET nombre = $1, apellido = $2, email = $3 WHERE id_usuario = $4",
-        [nombre, apellido, email, id]
-    );
-
-    return res.json(`User ${id} updated Successfully`);
-};
+import { pool } from "../db/database";
 
 //CRUD PEDIDOS
 export const createPedido = async (
@@ -156,36 +87,3 @@ export const deletePedido = async (
         return res.status(500).json("Internal Server error...");
     }
 };
-
-
-
-
-
-
-
-
-/*export const getRoles = async (req: Request, res: Response): Promise<Response> => {
-    try{
-        const response = await pool.query('SELECT * FROM rolles',);
-        return res.status(200).json(response.rows);
-
-    }
-    catch(e){
-        console.log(e); 
-        return res.status(500).json('Internal Server error...');
-    }
-}
-
-export const getRoleById = async (req: Request, res: Response): Promise<Response> => {
-    try{
-        const id = parseInt(req.params.id);
-        const response: QueryResult = await pool.query('SELECT * FROM rolles WHERE id_roll = $1', [id]);
-        return res.status(200).json(response.rows);
-
-    }
-    catch(e){
-        console.log(e); 
-        return res.status(500).json('Internal Server error...');
-    }
-
-}*/
