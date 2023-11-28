@@ -1,12 +1,31 @@
 import { Router } from 'express';
 const router = Router();
 
-import { createUser, deleteUser, getUsers, loginUser, updateUser } from '../controllers/usuario.controller';
+import {
+    createUser,
+    deleteUser,
+    getUserById,
+    getUsers,
+    loginUser,
+    updateUser
+} from '../controllers/usuario.controller';
 
-router.get('/usuarios', getUsers); //ruta para obtener todos los usuarios
-router.post('/registroUsuario', createUser); //ruta para crear un usuario
-router.put('/usuario/:id', updateUser); //ruta para actualizar un usuario
-router.delete('/usuario/:id', deleteUser); //ruta para eliminar un usuario
-router.post('/login', loginUser); //ruta para iniciar sesión
+// Prefijo rutas relacionadas con usuarios
+const userRoutes = Router();
+
+userRoutes.get('/', getUsers); // Obtener todos los usuarios
+userRoutes.get('/:id', getUserById); // Obtener un usuario por su ID
+userRoutes.patch('/:id', updateUser); // Actualizar un usuario
+userRoutes.delete('/:id', deleteUser); // Eliminar un usuario
+
+// Prefijo rutas relacionadas con autenticación
+const authRoutes = Router();
+authRoutes.post('/registro', createUser); // Registro de usuario
+authRoutes.post('/login', loginUser); // Inicio de sesión
+
+// Prefijos de las rutas
+router.use('/api/usuarios', userRoutes);
+router.use('/api/auth', authRoutes);
 
 export default router;
+
