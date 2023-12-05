@@ -4,7 +4,7 @@ import express from 'express';
 const app = express();
 
 import userRoutes from './routes/usuario.routes';
-import pedidoRoutes from './routes/pedido.routes';
+import pedidoRoutes from './routes/publicacion.routes';
 
 //middlewares
 app.use(express.json());

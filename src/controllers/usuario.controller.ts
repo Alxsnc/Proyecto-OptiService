@@ -99,7 +99,7 @@ export const loginUser = async (
         return res.status(200).json({ token });
     } catch (e) {
         console.error(e);
-        return res.status(500).json("Error interno del servidor");
+        return res.status(500).json("Error interno del servidor...");
     }
 };
 
@@ -124,7 +124,7 @@ export const deleteUser = async (
         return res.json({ message: `Usuario con ID ${id_usuario} eliminado exitosamente` });
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Error interno del servidor");
+        return res.status(500).json("Error interno del servidor...");
     }
 };
 
@@ -155,7 +155,7 @@ export const getUsers = async (
         return res.status(200).json(users);
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Error interno del servidor");
+        return res.status(500).json("Error interno del servidor...");
     }
 };
 
@@ -188,7 +188,7 @@ export const getUserById = async (
         return res.status(200).json(user);
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Error interno del servidor");
+        return res.status(500).json("Error interno del servidor...");
     }
 };
 
@@ -249,7 +249,7 @@ export const updateUser = async (
         return res.json({ message: `Usuario con ID ${userId} actualizado exitosamente` });
     } catch (error) {
         console.error(error);
-        return res.status(500).json("Error interno del servidor");
+        return res.status(500).json("Error interno del servidor...");
     }
 };
 
