@@ -1,21 +1,22 @@
-import { Router } from 'express';
+import { Router } from "express";
 const router = Router();
 
 import {
     createUser,
+    loginUser,
+    getUsers,
     deleteUser,
     getUserById,
-    getUsers,
-    loginUser,
-    updateUser
-} from '../controllers/usuario.controller';
+    updateUser,
+
+} from '../controllers/usuario.controller.js';
 
 // Prefijo rutas relacionadas con usuarios
 const userRoutes = Router();
 
 userRoutes.get('/', getUsers); // Obtener todos los usuarios
 userRoutes.get('/:id', getUserById); // Obtener un usuario por su ID
-userRoutes.patch('/:id', updateUser); // Actualizar un usuario
+userRoutes.put('/:id', updateUser); // Actualizar un usuario
 userRoutes.delete('/:id', deleteUser); // Eliminar un usuario
 
 // Prefijo rutas relacionadas con autenticación
@@ -28,4 +29,3 @@ router.use('/api/usuarios', userRoutes);
 router.use('/api/auth', authRoutes);
 
 export default router;
-
