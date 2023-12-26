@@ -7,7 +7,7 @@ const app = express();
 //middlewares
 app.use(express.json());
 
-
+//Rutas
 app.use(usuarioRoutes, publicacionRoutes);
 
 export default app;

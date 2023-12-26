@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "../loadEnv.js";
 
+//AUTH
+//Registro de usuario 
 export const createUser = async (req, res) => {
   try {
     //validacion de datos
@@ -138,8 +140,6 @@ export const loginUser = async (req, res) => {
           expiresIn: "1h",
         }
       );
-
-      console.log(token);
     }
 
     //Devolver respuesta adecuada
@@ -154,6 +154,7 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
 
 //Eliminar usuario
 export const deleteUser = async (req, res) => {
