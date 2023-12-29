@@ -11,6 +11,8 @@ export const createUser = async (req, res) => {
     const { id_usuario, nombre, apellido, email, contrasena, fecha_nac } =
       req.body;
 
+      console.log(req.body);
+
     // Verificar campos requeridos
     if (
       !id_usuario ||
