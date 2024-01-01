@@ -12,6 +12,7 @@ publicacionRoutes.get('/:id', publicacionControllers.getPublicacionById); // Obt
 publicacionRoutes.get('/usuario/:id_usuario', publicacionControllers.getPublicacionesPorUsuario); // Obtener publicaciones por usuario
 publicacionRoutes.put('/:id', publicacionControllers.updatePublicacion); // Actualizar una publicación por su ID
 publicacionRoutes.delete('/:id', publicacionControllers.deletePublicacion); // Eliminar una publicación por su ID
+publicacionRoutes.get('/categorias/:nombre_categoria', publicacionControllers.getPublicacionesPorCategoria); // Obtener publicaciones por categoria
 
 // Prefijo de las rutas
 router.use('/api/publicaciones', publicacionRoutes);

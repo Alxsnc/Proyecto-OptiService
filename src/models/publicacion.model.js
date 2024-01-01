@@ -25,6 +25,9 @@ export const Publicacion = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    id_categoria: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     timestamps: false,
