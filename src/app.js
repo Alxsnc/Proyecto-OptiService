@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import usuarioRoutes from "./routes/usuario.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import publicacionRoutes from "./routes/publicacion.routes.js";
 
 const app = express();
@@ -12,6 +13,6 @@ app.use(cors({
 app.use(express.json());
 
 //Rutas
-app.use(usuarioRoutes, publicacionRoutes);
+app.use(userRoutes, authRoutes, publicacionRoutes);
 
 export default app;
