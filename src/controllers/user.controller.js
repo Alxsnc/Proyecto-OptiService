@@ -1,4 +1,5 @@
 import { Usuario } from "../models/usuario.model.js";
+import { UsuarioRol } from "../models/usuarioRol.model.js";
 
 //Eliminar usuario
 export const deleteUser = async (req, res) => {
@@ -14,6 +15,13 @@ export const deleteUser = async (req, res) => {
     if (!usuarioExistente) {
       return res.status(400).json({ error: "El usuario no existe" });
     }
+
+    // Eliminar roles asociados al usuario
+    await UsuarioRol.destroy({
+      where: {
+        id_usuario,
+      },
+    });
 
     //eliminar usuario
     await Usuario.destroy({
