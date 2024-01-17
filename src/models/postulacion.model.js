@@ -9,11 +9,14 @@ export const Postulacion = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    id_usuario: {
-      type: DataTypes.CHAR(10),
-    },
     id_publicacion: {
       type: DataTypes.INTEGER,
+    },
+    id_estado_postulacion: {
+      type: DataTypes.INTEGER,
+    },
+    id_empleado: {
+      type: DataTypes.INTEGER
     },
   },
   {

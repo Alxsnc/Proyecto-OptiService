@@ -17,11 +17,15 @@ export const Usuario = sequelize.define(
     email: {
       type: DataTypes.CHAR(100),
     },
-    contrasena: {
+    password: {
       type: DataTypes.CHAR(300),
     },
-    fecha_nac: {
+    fecha_nacimiento: {
       type: DataTypes.DATE,
+    },
+    fecha_registro: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {

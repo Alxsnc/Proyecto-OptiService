@@ -6,7 +6,7 @@ import { Rol } from "./rol.model.js";
 export const UsuarioRol = sequelize.define(
   "usuarios_roles",
   {
-    id_usuarios_roles: {
+    id_usuario_rol: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

@@ -8,11 +8,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "../loadEnv.js";
 
+
 //Registro de usuario
 export const singUp = async (req, res) => {
   try {
     //validacion de datos
-    const { id_usuario, nombre, apellido, email, contrasena, fecha_nac } =
+    const { id_usuario, nombre, apellido, email, password, fecha_nacimiento } =
       req.body;
 
     console.log(req.body);
@@ -23,8 +24,8 @@ export const singUp = async (req, res) => {
       !nombre ||
       !apellido ||
       !email ||
-      !contrasena ||
-      !fecha_nac
+      !password ||
+      !fecha_nacimiento
     ) {
       return res
         .status(400)
@@ -79,7 +80,7 @@ export const singUp = async (req, res) => {
 
     //Hashear contraseña
     const salt = await bcrypt.genSalt(10);
-    const contrasenaHash = await bcrypt.hash(contrasena, salt);
+    const passwordHash = await bcrypt.hash(password, salt);
 
     //crear usuario
     const usuario = await Usuario.create({
@@ -87,8 +88,8 @@ export const singUp = async (req, res) => {
       nombre,
       apellido,
       email,
-      contrasena: contrasenaHash,
-      fecha_nac,
+      password: passwordHash,
+      fecha_nacimiento,
     });
 
     // Asociar roles al nuevo usuario
@@ -114,10 +115,10 @@ export const singUp = async (req, res) => {
 export const singIn = async (req, res) => {
   try {
     // validación de datos
-    const { email, contrasena, selectedRol } = req.body;
+    const { email, password, selectedRol } = req.body;
 
     // Verificar campos requeridos
-    if (!email || !contrasena || !selectedRol) {
+    if (!email || !password || !selectedRol) {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios" });
@@ -140,11 +141,11 @@ export const singIn = async (req, res) => {
     }
 
     // verificar contraseña
-    const contrasenaValida = await bcrypt.compare(
-      contrasena,
-      usuarioExistente.contrasena
+    const passwordValida = await bcrypt.compare(
+      password,
+      usuarioExistente.password
     );
-    if (!contrasenaValida) {
+    if (!passwordValida) {
       return res.status(400).json({ error: "Contraseña incorrecta" });
     }
 
@@ -202,75 +203,3 @@ export const singIn = async (req, res) => {
     });
   }
 };
-
-/* VIEJO SIGNIN
-export const singIn = async (req, res) => {
-  try {
-    //validacion de datos
-    const { email, contrasena } = req.body;
-
-    // Verificar campos requeridos
-    if (!email || !contrasena) {
-      return res
-        .status(400)
-        .json({ error: "Todos los campos son obligatorios" });
-    }
-
-    // Validar el formato del correo electrónico
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailValid.test(email)) {
-      return res
-        .status(400)
-        .json({ error: "El formato del correo electrónico es inválido" });
-    }
-
-    //verificar si el usuario ya existe
-    const usuarioExistente = await Usuario.findOne({ where: { email: email } });
-    if (!usuarioExistente) {
-      return res
-        .status(400)
-        .json({ error: "El correo electronico no está registrado" });
-    }
-
-    //verificar contraseña
-    const contrasenaValida = await bcrypt.compare(
-      contrasena,
-      usuarioExistente.contrasena
-    );
-    if (!contrasenaValida) {
-      return res.status(400).json({ error: "Contraseña incorrecta" });
-    }
-
-    //Crear token
-    let token = null;
-
-    if (!process.env.SECRET_KEY) {
-      console.error("Error: El secreto no está definido.");
-    } else {
-      // Generar el token
-      token = jwt.sign(
-        {
-          id_usuario: usuarioExistente.id_usuario,
-          nombre: usuarioExistente.nombre,
-          apellido: usuarioExistente.apellido,
-          email: usuarioExistente.email,
-        },
-        process.env.SECRET_KEY,
-        {
-          expiresIn: "1h",
-        }
-      );
-    }
-
-    //Devolver respuesta adecuada
-    return res.status(200).json({
-      message: "Usuario logueado exitosamente",
-      token,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Error al loguear el usuario",
-    });
-  }
-};*/

@@ -9,17 +9,14 @@ export const Publicacion = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    id_usuario: {
-      type: DataTypes.CHAR(10),
-    },
     titulo: {
-      type: DataTypes.CHAR(100),
+      type: DataTypes.CHAR(500),
     },
     descripcion: {
       type: DataTypes.CHAR(500),
     },
     pago: {
-      type: DataTypes.CHAR(100),
+      type: DataTypes.CHAR(500),
     },
     fecha_publicacion: {
       type: DataTypes.DATE,
@@ -27,6 +24,22 @@ export const Publicacion = sequelize.define(
     },
     id_categoria: {
       type: DataTypes.INTEGER,
+    },
+    id_estado_publicacion: {
+      type: DataTypes.INTEGER,
+    },
+    provincia: {
+      type: DataTypes.CHAR(100),
+    },
+    ciudad: {
+      type: DataTypes.CHAR(100),
+    },
+    id_empleador: {
+      type: DataTypes.INTEGER,
+    },
+    fecha_modificacion: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {

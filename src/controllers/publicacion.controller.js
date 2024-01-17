@@ -1,19 +1,20 @@
 import { Publicacion } from "../models/publicacion.model.js";
 import { Categoria } from "../models/categoria.model.js";
+import { UsuarioRol } from "../models/usuarioRol.model.js";
 
 export const createPublicacion = async (req, res) => {
   try {
     // Validación de datos
-    const { id_usuario, titulo, descripcion, pago, nombre_categoria } =
+    const { titulo, descripcion, pago, nombre_categoria, provincia, ciudad, id_usuario} =
       req.body;
 
     // Verificar campos requeridos
-    if (!id_usuario || !titulo || !descripcion || !pago || !nombre_categoria) {
+    if (!titulo || !descripcion || !pago || !nombre_categoria || !provincia || !ciudad) {
       return res
         .status(400)
         .json({
           error:
-            "Todos los campos son obligatorios, incluyendo nombre_categoria",
+            "Todos los campos son obligatorios",
         });
     }
 
@@ -31,13 +32,24 @@ export const createPublicacion = async (req, res) => {
         .json({ error: "La categoría seleccionada no existe" });
     }
 
+    // Verificar si el usuario es un empleador
+    const checkUser =  await UsuarioRol.findOne({
+      where: {
+        id_usuario: id_usuario,
+        id_rol: 2,
+      },
+    });
+
     // Crear publicación
     const publicacion = await Publicacion.create({
-      id_usuario,
       titulo,
       descripcion,
       pago,
-      id_categoria: categoria.id_categoria, // Almacenar el id de la categoría en la publicación
+      id_categoria: categoria.id_categoria,
+      id_estado_publicacion: 1,
+      provincia,
+      ciudad,
+      id_empleador: checkUser.id_usuario_rol,
     });
 
     // Respuesta

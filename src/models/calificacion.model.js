@@ -9,9 +9,6 @@ export const Calificacion = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    id_usuario: {
-      type: DataTypes.CHAR(10),
-    },
     id_publicacion: {
       type: DataTypes.INTEGER,
     },
@@ -24,6 +21,12 @@ export const Calificacion = sequelize.define(
     fecha_calificacion: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    id_usuario_calificador: {
+      type: DataTypes.INTEGER,
+    },
+    id_usuario_calificado: {
+      type: DataTypes.INTEGER,
     },
   },
   {
