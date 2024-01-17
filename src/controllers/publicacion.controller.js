@@ -40,13 +40,19 @@ export const createPublicacion = async (req, res) => {
       },
     });
 
+    if (!checkUser) {
+      return res
+        .status(404)
+        .json({ error: "El usuario seleccionado no es un empleador" });
+    }
+
     // Crear publicación
     const publicacion = await Publicacion.create({
       titulo,
       descripcion,
       pago,
       id_categoria: categoria.id_categoria,
-      id_estado_publicacion: 1,
+      id_estado_publicacion: 1, //Todas las publicaciones se crean con estado Activa (1)
       provincia,
       ciudad,
       id_empleador: checkUser.id_usuario_rol,
@@ -74,6 +80,59 @@ export const getPublicaciones = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+//Listar publicaciones activas
+export const getPublicacionesActivas = async (req, res) => {
+  try {
+    const publicaciones = await Publicacion.findAll({
+      where: {
+        id_estado_publicacion: 1,
+      },
+    });
+    res.json({
+      message: "Lista de publicaciones activas",
+      publicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Listar publicaciones En Espera
+export const getPublicacionesEnEspera = async (req, res) => {
+  try {
+    const publicaciones = await Publicacion.findAll({
+      where: {
+        id_estado_publicacion: 2,
+      },
+    });
+    res.json({
+      message: "Lista de publicaciones en espera",
+      publicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Listar publicaciones cerradas
+export const getPublicacionesCerradas = async (req, res) => {
+  try {
+    const publicaciones = await Publicacion.findAll({
+      where: {
+        id_estado_publicacion: 3,
+      },
+    });
+    res.json({
+      message: "Lista de publicaciones cerradas",
+      publicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
 // Obtener una publicación por su ID
 export const getPublicacionById = async (req, res) => {
