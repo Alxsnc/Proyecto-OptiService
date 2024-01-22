@@ -73,7 +73,6 @@ export const getPublicaciones = async (req, res) => {
   try {
     const publicaciones = await Publicacion.findAll();
     res.json({
-      message: "Lista de publicaciones",
       publicaciones,
     });
   } catch (error) {
@@ -90,7 +89,6 @@ export const getPublicacionesActivas = async (req, res) => {
       },
     });
     res.json({
-      message: "Lista de publicaciones activas",
       publicaciones,
     });
   } catch (error) {
@@ -142,7 +140,6 @@ export const getPublicacionById = async (req, res) => {
       where: { id_publicacion: id_publicacion },
     });
     res.json({
-      message: "Publicacion encontrada",
       publicacion,
     });
   } catch (error) {
@@ -150,15 +147,23 @@ export const getPublicacionById = async (req, res) => {
   }
 };
 
-// Obtener publicaciones por usuario
+// Obtener publicaciones por usuario y activas
 export const getPublicacionesPorUsuario = async (req, res) => {
   try {
     const id_usuario = req.params.id_usuario;
+
+    const checkEmpleador = await UsuarioRol.findOne({ 
+      where: { 
+        id_usuario: id_usuario,
+        id_rol: 2, },
+    });
+
     const publicaciones = await Publicacion.findAll({
-      where: { id_usuario: id_usuario },
+      where: { 
+        id_empleador: checkEmpleador.id_usuario_rol,
+        id_estado_publicacion: 1, },
     });
     res.json({
-      message: "Publicaciones encontradas",
       publicaciones,
     });
   } catch (error) {

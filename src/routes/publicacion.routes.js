@@ -7,9 +7,9 @@ import * as publicacionControllers from '../controllers/publicacion.controller.j
 const publicacionRoutes = Router();
 
 publicacionRoutes.post('/nuevaPublicacion', publicacionControllers.createPublicacion); // Crear una nueva publicación
-publicacionRoutes.get('/', publicacionControllers.getPublicaciones); // Obtener todas las publicaciones
+publicacionRoutes.get('/listaPublicaciones', publicacionControllers.getPublicaciones); // Obtener todas las publicaciones
 publicacionRoutes.get('/:id', publicacionControllers.getPublicacionById); // Obtener una publicación por su ID
-publicacionRoutes.get('/usuario/:id_usuario', publicacionControllers.getPublicacionesPorUsuario); // Obtener publicaciones por usuario
+publicacionRoutes.get('/listaPublicaciones/:id_usuario', publicacionControllers.getPublicacionesPorUsuario); // Obtener publicaciones por usuario
 publicacionRoutes.put('/:id', publicacionControllers.updatePublicacion); // Actualizar una publicación por su ID
 publicacionRoutes.delete('/:id', publicacionControllers.deletePublicacion); // Eliminar una publicación por su ID
 publicacionRoutes.get('/categorias/:nombre_categoria', publicacionControllers.getPublicacionesPorCategoria); // Obtener publicaciones por categoria
