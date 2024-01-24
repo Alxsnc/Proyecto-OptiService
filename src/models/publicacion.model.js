@@ -43,6 +43,8 @@ export const Publicacion = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
+    updatedAt: 'fecha_modificacion',
+    createdAt: 'fecha_publicacion',
   }
 );

@@ -29,7 +29,9 @@ export const Usuario = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
+    updatedAt: false,
+    createdAt: 'fecha_registro',
   }
 );
 

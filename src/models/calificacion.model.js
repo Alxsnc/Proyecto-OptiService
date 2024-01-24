@@ -30,6 +30,8 @@ export const Calificacion = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
+    updatedAt: false,
+    createdAt: 'fecha_calificacion',
   }
 );

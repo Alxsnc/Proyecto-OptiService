@@ -18,8 +18,15 @@ export const Postulacion = sequelize.define(
     id_empleado: {
       type: DataTypes.INTEGER
     },
+    fecha_postulacion: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    
   },
   {
-    timestamps: false,
+    timestamps: true,
+    updatedAt: false,
+    createdAt: 'fecha_postulacion',
   }
 );
