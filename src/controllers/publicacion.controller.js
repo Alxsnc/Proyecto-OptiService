@@ -6,11 +6,11 @@ import { UsuarioRol } from "../models/usuarioRol.model.js";
 export const createPublicacion = async (req, res) => {
   try {
     // Validación de datos
-    const { titulo, descripcion, pago, nombre_categoria, provincia, ciudad, id_usuario} =
+    const { titulo, descripcion, pago, id_categoria, provincia, ciudad, id_usuario} =
       req.body;
 
     // Verificar campos requeridos
-    if (!titulo || !descripcion || !pago || !nombre_categoria || !provincia || !ciudad) {
+    if (!titulo || !descripcion || !pago || !id_categoria || !provincia || !ciudad) {
       return res
         .status(400)
         .json({
@@ -22,7 +22,7 @@ export const createPublicacion = async (req, res) => {
     // Buscar el id de la categoría correspondiente al nombre proporcionado
     const categoria = await Categoria.findOne({
       where: {
-        categoria: nombre_categoria,
+        id_categoria: id_categoria,
       },
     });
 
@@ -52,7 +52,7 @@ export const createPublicacion = async (req, res) => {
       titulo,
       descripcion,
       pago,
-      id_categoria: categoria.id_categoria,
+      id_categoria: id_categoria,
       id_estado_publicacion: 1, //Todas las publicaciones se crean con estado Activa (1)
       provincia,
       ciudad,
@@ -63,18 +63,6 @@ export const createPublicacion = async (req, res) => {
     res.status(201).json({
       message: "Publicación creada exitosamente.",
       publicacion,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-//listar publicaciones
-export const getPublicaciones = async (req, res) => {
-  try {
-    const publicaciones = await Publicacion.findAll();
-    res.json({
-      publicaciones,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -129,6 +117,7 @@ export const getPublicacionById = async (req, res) => {
   try {
     const id_publicacion = req.params.id;
     const publicacion = await Publicacion.findOne({
+      attributes: ['titulo', 'descripcion', 'pago', 'id_categoria', 'provincia', 'ciudad'],
       where: { id_publicacion: id_publicacion },
     });
     res.json({
@@ -167,10 +156,10 @@ export const getPublicacionesActivasUsuario = async (req, res) => {
 export const updatePublicacion = async (req, res) => {
     try {
       const id_publicacion = req.params.id;
-      const { titulo, descripcion, pago, nombre_categoria, provincia, ciudad } = req.body;
+      const { titulo, descripcion, pago, id_categoria, provincia, ciudad } = req.body;
   
       // Verificar campos requeridos
-      if (!titulo || !descripcion || !pago || !nombre_categoria || !provincia || !ciudad) {
+      if (!titulo || !descripcion || !pago || !id_categoria || !provincia || !ciudad) {
         return res
           .status(400)
           .json({ error: "Todos los campos son obligatorios" });
@@ -189,7 +178,7 @@ export const updatePublicacion = async (req, res) => {
       // Buscar el id de la nueva categoría
       const categoria = await Categoria.findOne({
         where: {
-          categoria: nombre_categoria,
+          id_categoria: id_categoria,
         },
       });
   
@@ -204,7 +193,7 @@ export const updatePublicacion = async (req, res) => {
           titulo,
           descripcion,
           pago,
-          id_categoria: categoria.id_categoria, // Actualizar la categoría
+          id_categoria: id_categoria, // Actualizar la categoría
           provincia,
           ciudad,
         },
@@ -239,12 +228,12 @@ export const deletePublicacion = async (req, res) => {
 // Obtener publicaciones activas por categoría
 export const getPublicacionesActivasPorCategoria = async (req, res) => {
     try {
-      const nombre_categoria = req.params.nombre_categoria;
+      const id_categoria = req.params.id_categoria;
   
       // Verificar si la categoría existe
       const categoria = await Categoria.findOne({
         where: {
-          categoria: nombre_categoria
+          id_categoria: id_categoria
         },
       });
   
@@ -255,7 +244,7 @@ export const getPublicacionesActivasPorCategoria = async (req, res) => {
       // Obtener las publicaciones de la categoría
       const publicaciones = await Publicacion.findAll({
         where: {
-          id_categoria: categoria.id_categoria,
+          id_categoria: id_categoria,
           id_estado_publicacion: 1, // Solo las publicaciones activas
         },
       });

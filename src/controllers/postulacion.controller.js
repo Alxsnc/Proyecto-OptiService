@@ -2,6 +2,7 @@ import { Postulacion } from "../models/postulacion.model.js";
 import { Publicacion } from "../models/publicacion.model.js";
 import { UsuarioRol } from "../models/usuarioRol.model.js";
 
+//Crear postulacion a una publicación
 export const createPostulacion = async (req, res) => {
   try {
     // Validación de datos
@@ -60,29 +61,111 @@ export const createPostulacion = async (req, res) => {
   }
 };
 
-export const getPostulaciones = async (req, res) => {
+
+//Cambiar estado de postulación a Aceptado
+export const aceptarPostulacion = async (req, res) => {
   try {
-    const postulaciones = await Postulacion.findAll({
-      include: [
-        {
-          model: Publicacion,
-          as: "publicacion",
-          attributes: ["id_publicacion", "titulo", "descripcion"],
-        },
-        {
-          model: UsuarioRol,
-          as: "empleado",
-          attributes: ["id_usuario_rol"],
-        },
-      ],
+    const { id_postulacion } = req.params;
+
+    // Verificar si la postulación existe
+    const postulacion = await Postulacion.findOne({
+      where: {
+        id_postulacion: id_postulacion,
+      },
     });
 
+    if (!postulacion) {
+      return res
+        .status(404)
+        .json({ error: "La postulación seleccionada no existe" });
+    }
+
+    // Verificar si la postulación ya fue aceptada
+    if (postulacion.id_estado_postulacion == 2) {
+      return res
+        .status(404)
+        .json({ error: "La postulación ya fue aceptada anteriormente" });
+    }
+
+    // Verificar si la postulación ya fue rechazada
+    if (postulacion.id_estado_postulacion == 3) {
+      return res
+        .status(404)
+        .json({ error: "La postulación ya fue rechazada anteriormente" });
+    }
+
+    // Cambiar estado de postulación a Aceptado
+    await Postulacion.update(
+      {
+        id_estado_postulacion: 2,
+      },
+      {
+        where: {
+          id_postulacion: id_postulacion,
+        },
+      }
+    );
+
     res.status(200).json({
-      postulaciones,
+      message: "Postulación aceptada exitosamente.",
     });
   } catch (error) {
     res.status(500).json({
-      error: "Ocurrió un error al obtener las postulaciones.",
+      error: "Ocurrió un error al aceptar la postulación.",
+    });
+  }
+};
+
+//Cambiar estado de postulación a Rechazado
+export const rechazarPostulacion = async (req, res) => {
+  try {
+    const { id_postulacion } = req.params;
+
+    // Verificar si la postulación existe
+    const postulacion = await Postulacion.findOne({
+      where: {
+        id_postulacion: id_postulacion,
+      },
+    });
+
+    if (!postulacion) {
+      return res
+        .status(404)
+        .json({ error: "La postulación seleccionada no existe" });
+    }
+
+    // Verificar si la postulación ya fue aceptada
+    if (postulacion.id_estado_postulacion == 2) {
+      return res
+        .status(404)
+        .json({ error: "La postulación ya fue aceptada anteriormente" });
+    }
+
+    // Verificar si la postulación ya fue rechazada
+    if (postulacion.id_estado_postulacion == 3) {
+      return res
+        .status(404)
+        .json({ error: "La postulación ya fue rechazada anteriormente" });
+    }
+
+    // Cambiar estado de postulación a Rechazado
+    await Postulacion.update(
+      {
+        id_estado_postulacion: 3,
+      },
+      {
+        where: {
+          id_postulacion: id_postulacion,
+        },
+      }
+    );
+
+    res.status(200).json({
+      message: "Postulación rechazada exitosamente.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Ocurrió un error al rechazar la postulación.",
     });
   }
 };
