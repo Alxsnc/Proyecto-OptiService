@@ -15,19 +15,12 @@ publicacionRoutes.get('/listaPublicaciones/activas/:id_usuario', publicacionCont
 publicacionRoutes.get('/listaPublicaciones/categorias/:id_categoria', publicacionControllers.getPublicacionesActivasPorCategoria); // Obtener publicaciones activas por categoria
 publicacionRoutes.get('/listaPublicaciones/cerradas/:id_usuario', publicacionControllers.getPublicacionesCerradasUsuario); // Obtener publicaciones cerradas por usuario
 
-//LISTAS PARA EMPLEADO
-publicacionRoutes.get('/listaPublicacionesActivas', publicacionControllers.getPublicacionesActivas); // Obtener todas las publicaciones activas para postular
-
-
 //UDPATE PUBLICACION *ACTIVAS Y EN ESPERA, NO SE MODIFICAN PUBLICACIONES CERRADAS*
-publicacionRoutes.put('/modificarPublicacion/:id', publicacionControllers.updatePublicacion);
+publicacionRoutes.get('/publicacionById/:id', publicacionControllers.getPublicacionById); // Obtener una publicación por su ID
+publicacionRoutes.put('/modificarPublicacion/:id', publicacionControllers.updatePublicacion); //modificar publicacion
 
 //DELETE PUBLICACION ACTIVA  *PUBLICACIONES EN ESPERA (2) Y CERRADAS (3) NO SE ELIMINAR*
 publicacionRoutes.delete('/eliminarPublicacion/:id', publicacionControllers.deletePublicacion);
-
-//LISTAS GRAL (VER SI SE IMPLEMENTAN)
-publicacionRoutes.get('/publicacionById/:id', publicacionControllers.getPublicacionById); // Obtener una publicación por su ID ??
-
 
 // Prefijo de las rutas
 router.use('/api/publicaciones', publicacionRoutes);

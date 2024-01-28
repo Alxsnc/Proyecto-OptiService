@@ -69,22 +69,6 @@ export const createPublicacion = async (req, res) => {
   }
 };
 
-//Listar publicaciones activa (Para Empleados)
-export const getPublicacionesActivas = async (req, res) => {
-  try {
-    const publicaciones = await Publicacion.findAll({
-      where: {
-        id_estado_publicacion: 1,
-      },
-    });
-    res.json({
-      publicaciones,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 //Listar publicaciones cerradas por usuario 
 export const getPublicacionesCerradasUsuario = async (req, res) => {
   try {
