@@ -2,6 +2,7 @@ import { Publicacion } from "../models/publicacion.model.js";
 import { Categoria } from "../models/categoria.model.js";
 import { UsuarioRol } from "../models/usuarioRol.model.js";
 import { Postulacion } from "../models/postulacion.model.js";
+import { Usuario } from "../models/usuario.model.js";
 
 //Crear Publicacion
 export const createPublicacion = async (req, res) => {
@@ -314,15 +315,43 @@ export const getPublicacionesActivasPorCategoria = async (req, res) => {
 export const getPostulantesPorPublicacion = async (req, res) => {
   try {
     const { id_publicacion } = req.params;
-    const postulacion = await Postulacion.findAll({
+
+    const postulantes = await Postulacion.findAll({
       where: {
         id_publicacion: id_publicacion,
       },
+      include: [
+        {
+          model: UsuarioRol,
+          as: 'empleado',
+          include: [
+            {
+              model: Usuario,
+              as: 'usuario',
+              attributes: ['nombre', 'apellido', 'email'],
+            },
+          ],
+        },
+      ],
     });
+
+    const postulantesInfo = postulantes.map(postulacion => {
+      const empleado = postulacion.empleado;
+      const usuario = empleado.usuario;
+      return {
+        id_postulacion: postulacion.id_postulacion,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email,
+        // Puedes agregar más campos si es necesario
+      };
+    });
+
     res.json({
-      data,
+      data: postulantesInfo,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+

@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 
+import { UsuarioRol } from "./usuarioRol.model.js";
+
 export const Postulacion = sequelize.define(
   "postulaciones",
   {
@@ -30,3 +32,6 @@ export const Postulacion = sequelize.define(
     createdAt: 'fecha_postulacion',
   }
 );
+
+Postulacion.belongsTo(UsuarioRol, { foreignKey: 'id_empleado', as: 'empleado' });
+
