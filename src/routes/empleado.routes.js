@@ -7,7 +7,7 @@ import * as empleadoControllers from '../controllers/empleado.controller.js';
 const empleadoRoutes = Router();
 
 //LISTAS PARA EMPLEADO
-empleadoRoutes.get('/listaPublicacionesActivas', empleadoControllers.getPublicacionesActivas); // Obtener todas las publicaciones activas para postular
+empleadoRoutes.get('/listaPublicacionesActivas/:id_usuario', empleadoControllers.getPublicacionesActivas); // Obtener todas las publicaciones activas para postular
 empleadoRoutes.get('/listaPublicacionesActivasPorCategoria/:id_categoria', empleadoControllers.getPublicacionesActivasPorCategoria); // Obtener todas las publicaciones activas por categoria para postular
 
 //POSTULACIONES
