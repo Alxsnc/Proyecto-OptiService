@@ -7,17 +7,28 @@ import { Postulacion } from "../models/postulacion.model.js";
 export const createPublicacion = async (req, res) => {
   try {
     // Validación de datos
-    const { titulo, descripcion, pago, id_categoria, provincia, ciudad, id_usuario} =
-      req.body;
+    const {
+      titulo,
+      descripcion,
+      pago,
+      id_categoria,
+      provincia,
+      ciudad,
+      id_usuario,
+    } = req.body;
 
     // Verificar campos requeridos
-    if (!titulo || !descripcion || !pago || !id_categoria || !provincia || !ciudad) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "Todos los campos son obligatorios",
-        });
+    if (
+      !titulo ||
+      !descripcion ||
+      !pago ||
+      !id_categoria ||
+      !provincia ||
+      !ciudad
+    ) {
+      return res.status(400).json({
+        error: "Todos los campos son obligatorios",
+      });
     }
 
     // Buscar el id de la categoría correspondiente al nombre proporcionado
@@ -35,7 +46,7 @@ export const createPublicacion = async (req, res) => {
     }
 
     // Verificar si el usuario es un empleador
-    const checkUser =  await UsuarioRol.findOne({
+    const checkUser = await UsuarioRol.findOne({
       where: {
         id_usuario: id_usuario,
         id_rol: 2,
@@ -70,15 +81,16 @@ export const createPublicacion = async (req, res) => {
   }
 };
 
-//Listar publicaciones cerradas por usuario 
+//Listar publicaciones cerradas por usuario
 export const getPublicacionesCerradasUsuario = async (req, res) => {
   try {
     const id_usuario = req.params.id_usuario;
 
-    const checkEmpleador = await UsuarioRol.findOne({ 
-      where: { 
+    const checkEmpleador = await UsuarioRol.findOne({
+      where: {
         id_usuario: id_usuario,
-        id_rol: 2, },
+        id_rol: 2,
+      },
     });
 
     const publicaciones = await Publicacion.findAll({
@@ -95,14 +107,19 @@ export const getPublicacionesCerradasUsuario = async (req, res) => {
   }
 };
 
-
-
 // Obtener una publicación por su ID
 export const getPublicacionById = async (req, res) => {
   try {
     const id_publicacion = req.params.id;
     const publicacion = await Publicacion.findOne({
-      attributes: ['titulo', 'descripcion', 'pago', 'id_categoria', 'provincia', 'ciudad'],
+      attributes: [
+        "titulo",
+        "descripcion",
+        "pago",
+        "id_categoria",
+        "provincia",
+        "ciudad",
+      ],
       where: { id_publicacion: id_publicacion },
     });
     res.json({
@@ -118,16 +135,18 @@ export const getPublicacionesActivasUsuario = async (req, res) => {
   try {
     const id_usuario = req.params.id_usuario;
 
-    const checkEmpleador = await UsuarioRol.findOne({ 
-      where: { 
+    const checkEmpleador = await UsuarioRol.findOne({
+      where: {
         id_usuario: id_usuario,
-        id_rol: 2, },
+        id_rol: 2,
+      },
     });
 
     const publicaciones = await Publicacion.findAll({
-      where: { 
+      where: {
         id_empleador: checkEmpleador.id_usuario_rol,
-        id_estado_publicacion: 1, },
+        id_estado_publicacion: 1,
+      },
     });
     res.json({
       publicaciones,
@@ -139,72 +158,118 @@ export const getPublicacionesActivasUsuario = async (req, res) => {
 
 // Actualizar una publicación
 export const updatePublicacion = async (req, res) => {
-    try {
-      const id_publicacion = req.params.id;
-      const { titulo, descripcion, pago, id_categoria, provincia, ciudad } = req.body;
-  
-      // Verificar campos requeridos
-      if (!titulo || !descripcion || !pago || !id_categoria || !provincia || !ciudad) {
-        return res
-          .status(400)
-          .json({ error: "Todos los campos son obligatorios" });
-      }
-  
-      // Buscar la publicación que se va a actualizar
-      const publicacion = await Publicacion.findOne({
-        where: { id_publicacion: id_publicacion },
-      });
-  
-      // Verificar si la publicación existe
-      if (!publicacion) {
-        return res.status(404).json({ error: "La publicación no existe" });
-      }
-  
-      // Buscar el id de la nueva categoría
-      const categoria = await Categoria.findOne({
-        where: {
-          id_categoria: id_categoria,
-        },
-      });
-  
-      // Verificar si la categoría existe
-      if (!categoria) {
-        return res.status(404).json({ error: "La categoría seleccionada no existe" });
-      }
-  
-      // Actualizar publicación
-      await Publicacion.update(
-        {
-          titulo,
-          descripcion,
-          pago,
-          id_categoria: id_categoria, // Actualizar la categoría
-          provincia,
-          ciudad,
-        },
-        {
-          where: { id_publicacion: id_publicacion },
-        }
-      );
-  
-      // Respuesta
-      res.json({
-        message: "Publicación actualizada exitosamente",
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+  try {
+    const id_publicacion = req.params.id;
+    const { titulo, descripcion, pago, id_categoria, provincia, ciudad } =
+      req.body;
+
+    // Verificar campos requeridos
+    if (
+      !titulo ||
+      !descripcion ||
+      !pago ||
+      !id_categoria ||
+      !provincia ||
+      !ciudad
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
     }
-  };
-  
+
+    // Buscar la publicación que se va a actualizar
+    const publicacion = await Publicacion.findOne({
+      where: { id_publicacion: id_publicacion },
+    });
+
+    // Verificar si la publicación existe
+    if (!publicacion) {
+      return res.status(404).json({ error: "La publicación no existe" });
+    }
+
+    // Buscar el id de la nueva categoría
+    const categoria = await Categoria.findOne({
+      where: {
+        id_categoria: id_categoria,
+      },
+    });
+
+    // Verificar si la categoría existe
+    if (!categoria) {
+      return res
+        .status(404)
+        .json({ error: "La categoría seleccionada no existe" });
+    }
+
+    // Actualizar publicación
+    await Publicacion.update(
+      {
+        titulo,
+        descripcion,
+        pago,
+        id_categoria: id_categoria, // Actualizar la categoría
+        provincia,
+        ciudad,
+      },
+      {
+        where: { id_publicacion: id_publicacion },
+      }
+    );
+
+    // Respuesta
+    res.json({
+      message: "Publicación actualizada exitosamente",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Eliminar una publicación
 export const deletePublicacion = async (req, res) => {
   try {
     const id_publicacion = req.params.id;
-    await Publicacion.destroy({
+
+    // Buscar la publicación que se va a eliminar
+    const publicacion = await Publicacion.findOne({
       where: { id_publicacion: id_publicacion },
     });
-    res.status(200) //Eliminado OK
+
+    // Verificar si la publicación existe
+    if (!publicacion) {
+      return res.status(404).json({ error: "La publicación no existe" });
+    }
+
+    // Verificar si la publicación tiene postulaciones en estado Aceptada o Rechazada
+        const postulaciones = await Postulacion.findOne({
+      where: {
+        id_publicacion: id_publicacion,
+        id_estado_postulacion: [2, 3],
+      }, // Solo las postulaciones en estado Aceptadas (2) o Rechazadas (3)},
+    });
+
+    if (postulaciones) {
+      return res
+        .status(404)
+        .json({
+          error:
+            "La publicación no puede ser eliminada porque tiene postulaciones en estado Aceptada o Rechazada",
+        });
+    } else {
+      await Postulacion.destroy({
+        where: {
+          id_publicacion: id_publicacion,
+          id_estado_postulacion: 1,
+        }, // Solo las postulaciones en estado Pendiente (1)},
+      });
+
+      await Publicacion.destroy({
+        where: { id_publicacion: id_publicacion },
+      });
+
+      return res.status(200).json({ message: 'Operacón Exitosa!' });
+    }
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -212,51 +277,52 @@ export const deletePublicacion = async (req, res) => {
 
 // Obtener publicaciones activas por categoría
 export const getPublicacionesActivasPorCategoria = async (req, res) => {
-    try {
-      const id_categoria = req.params.id_categoria;
-  
-      // Verificar si la categoría existe
-      const categoria = await Categoria.findOne({
-        where: {
-          id_categoria: id_categoria
-        },
-      });
-  
-      if (!categoria) {
-        return res.status(404).json({ error: "La categoría especificada no existe" });
-      }
-  
-      // Obtener las publicaciones de la categoría
-      const publicaciones = await Publicacion.findAll({
-        where: {
-          id_categoria: id_categoria,
-          id_estado_publicacion: 1, // Solo las publicaciones activas
-        },
-      });
-  
-      // Respuesta
-      res.json({
-        publicaciones,
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-  
-  //Lista de postulantes en una publicacion 
-  export const getPostulantesPorPublicacion = async (req, res) => {
-    try {
-      const { id_publicacion } = req.params;
-      const postulacion = await Postulacion.findAll({
-        where: {
-          id_publicacion: id_publicacion,
-        },
+  try {
+    const id_categoria = req.params.id_categoria;
 
-      });
-      res.json({
-        data,
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    // Verificar si la categoría existe
+    const categoria = await Categoria.findOne({
+      where: {
+        id_categoria: id_categoria,
+      },
+    });
+
+    if (!categoria) {
+      return res
+        .status(404)
+        .json({ error: "La categoría especificada no existe" });
     }
-  };
+
+    // Obtener las publicaciones de la categoría
+    const publicaciones = await Publicacion.findAll({
+      where: {
+        id_categoria: id_categoria,
+        id_estado_publicacion: 1, // Solo las publicaciones activas
+      },
+    });
+
+    // Respuesta
+    res.json({
+      publicaciones,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Lista de postulantes en una publicacion
+export const getPostulantesPorPublicacion = async (req, res) => {
+  try {
+    const { id_publicacion } = req.params;
+    const postulacion = await Postulacion.findAll({
+      where: {
+        id_publicacion: id_publicacion,
+      },
+    });
+    res.json({
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
