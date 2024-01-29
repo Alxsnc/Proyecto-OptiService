@@ -92,7 +92,7 @@ export const updateUser = async (req, res) => {
   try {
     //validacion de datos
     const id_usuario = req.params.id;
-    const { nombre, apellido, fecha_nac } = req.body;
+    const { nombre, apellido, fecha_nacimiento } = req.body;
 
     //verificar si la cedula ya existe
     const usuarioExistente = await Usuario.findOne({
@@ -109,7 +109,7 @@ export const updateUser = async (req, res) => {
       {
         nombre,
         apellido,
-        fecha_nac,
+        fecha_nacimiento,
       },
       {
         where: {

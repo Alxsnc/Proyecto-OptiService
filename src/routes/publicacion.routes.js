@@ -22,6 +22,9 @@ publicacionRoutes.put('/modificarPublicacion/:id', publicacionControllers.update
 //DELETE PUBLICACION ACTIVA  *PUBLICACIONES EN ESPERA (2) Y CERRADAS (3) NO SE ELIMINAR*
 publicacionRoutes.delete('/eliminarPublicacion/:id', publicacionControllers.deletePublicacion);
 
+//LISTA DE POSTULANTES
+publicacionRoutes.get('/listaPostulantes/:id_publicacion', publicacionControllers.getPostulantesPorPublicacion); // Obtener postulantes por publicacion
+
 // Prefijo de las rutas
 router.use('/api/publicaciones', publicacionRoutes);
 

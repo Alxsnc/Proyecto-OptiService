@@ -7,8 +7,8 @@ import * as userControllers from '../controllers/user.controller.js';
 const userRoutes = Router();
 
 userRoutes.get('/', userControllers.getUsers); // Obtener todos los usuarios
-userRoutes.get('/:id', userControllers.getUserById); // Obtener un usuario por su ID
-userRoutes.put('/:id', userControllers.updateUser); // Actualizar un usuario
+userRoutes.get('/obtenerUsuario/:id', userControllers.getUserById); // Obtener un usuario por su ID
+userRoutes.patch('/editarUsuario/:id', userControllers.updateUser); // Actualizar un usuario
 userRoutes.delete('/:id', userControllers.deleteUser); // Eliminar un usuario
 
 // Prefijos de las rutas

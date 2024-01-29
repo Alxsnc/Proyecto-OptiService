@@ -1,6 +1,7 @@
 import { Publicacion } from "../models/publicacion.model.js";
 import { Categoria } from "../models/categoria.model.js";
 import { UsuarioRol } from "../models/usuarioRol.model.js";
+import { Postulacion } from "../models/postulacion.model.js";
 
 //Crear Publicacion
 export const createPublicacion = async (req, res) => {
@@ -242,3 +243,20 @@ export const getPublicacionesActivasPorCategoria = async (req, res) => {
     }
   };
   
+  //Lista de postulantes en una publicacion 
+  export const getPostulantesPorPublicacion = async (req, res) => {
+    try {
+      const { id_publicacion } = req.params;
+      const postulacion = await Postulacion.findAll({
+        where: {
+          id_publicacion: id_publicacion,
+        },
+
+      });
+      res.json({
+        data,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };

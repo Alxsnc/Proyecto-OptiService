@@ -20,6 +20,7 @@ empleadoRoutes.put('/rechazarPostulacion/:id_postulacion', empleadoControllers.r
 
 
 
+
 // Prefijo de las rutas
 router.use('/api/empleado', empleadoRoutes);
 
