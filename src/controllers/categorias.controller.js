@@ -11,6 +11,5 @@ export const getCategorias = async (req, res) => {
         data: categorias,
         });
     } catch (error) {
-        console.log(error);
     }
 };

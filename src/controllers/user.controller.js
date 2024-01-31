@@ -35,7 +35,6 @@ export const deleteUser = async (req, res) => {
       message: "Usuario eliminado exitosamente",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al eliminar el usuario",
     });
@@ -54,7 +53,6 @@ export const getUsers = async (req, res) => {
       data: usuarios,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al listar los usuarios",
     });
@@ -80,7 +78,6 @@ export const getUserById = async (req, res) => {
       data: usuario,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al obtener el usuario",
     });
@@ -123,7 +120,6 @@ export const updateUser = async (req, res) => {
       message: "Usuario actualizado exitosamente",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al actualizar el usuario",
     });

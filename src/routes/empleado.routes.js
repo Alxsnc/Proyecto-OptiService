@@ -11,15 +11,18 @@ empleadoRoutes.get('/listaPublicacionesActivas/:id_usuario', empleadoControllers
 empleadoRoutes.get('/listaPublicacionesActivasPorCategoria/:id_categoria', empleadoControllers.getPublicacionesActivasPorCategoria); // Obtener todas las publicaciones activas por categoria para postular
 
 //POSTULACIONES
+//CRUD POSTULACIONES
 empleadoRoutes.post('/postular', empleadoControllers.createPostulacion); // Crear postulacion a una publicación
 
 //CAMBIO DE ESTADOS EN POSTULACIONES
 empleadoRoutes.put('/aceptarPostulacion/:id_postulacion', empleadoControllers.aceptarPostulacion); // Aceptar postulación
 empleadoRoutes.put('/rechazarPostulacion/:id_postulacion', empleadoControllers.rechazarPostulacion); // Rechazar postulación
 
+//CANCELAR POSTULACION
+empleadoRoutes.delete('/cancelarPostulacion/:id_postulacion', empleadoControllers.cancelarPostulacion); // Cancelar postulación
 
-
-
+//LISTAS
+empleadoRoutes.get('/listaPostulaciones/:id_empleado', empleadoControllers.getPostulacionesEmpleado); // Obtener todas las postulaciones de un empleado
 
 // Prefijo de las rutas
 router.use('/api/empleado', empleadoRoutes);

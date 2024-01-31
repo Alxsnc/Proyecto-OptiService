@@ -8,15 +8,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "../loadEnv.js";
 
-
 //Registro de usuario
 export const singUp = async (req, res) => {
   try {
     //validacion de datos
     const { id_usuario, nombre, apellido, email, password, fecha_nacimiento } =
       req.body;
-
-    console.log(req.body);
 
     // Verificar campos requeridos
     if (
@@ -104,7 +101,6 @@ export const singUp = async (req, res) => {
       data: usuario,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al crear el usuario",
     });
@@ -197,7 +193,6 @@ export const singIn = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error al loguear el usuario",
     });
