@@ -114,6 +114,7 @@ export const getPublicacionById = async (req, res) => {
     const id_publicacion = req.params.id;
     const publicacion = await Publicacion.findOne({
       attributes: [
+        "id_publicacion",
         "titulo",
         "descripcion",
         "pago",
@@ -343,6 +344,7 @@ export const getPostulantesPorPublicacion = async (req, res) => {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         email: usuario.email,
+        id_estado_postulacion: postulacion.id_estado_postulacion,
         // Puedes agregar más campos si es necesario
       };
     });
