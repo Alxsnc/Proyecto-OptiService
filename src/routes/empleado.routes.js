@@ -23,6 +23,7 @@ empleadoRoutes.delete('/cancelarPostulacion/:id_postulacion', empleadoController
 
 //LISTAS
 empleadoRoutes.get('/listaPostulaciones/:id_empleado', empleadoControllers.getPostulacionesEmpleado); // Obtener todas las postulaciones de un empleado
+empleadoRoutes.get('/listaContratosActivos/:id_empleado', empleadoControllers.getContratosActivos); // Obtener todas las postulaciones aceptadas de un empleado
 
 // Prefijo de las rutas
 router.use('/api/empleado', empleadoRoutes);

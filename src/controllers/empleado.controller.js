@@ -210,14 +210,14 @@ export const aceptarPostulacion = async (req, res) => {
     // Verificar si la postulación ya fue aceptada
     if (postulacion.id_estado_postulacion == 2) {
       return res
-        .status(404)
+        .status(409)
         .json({ error: "La postulación ya fue aceptada anteriormente" });
     }
 
     // Verificar si la postulación ya fue rechazada
     if (postulacion.id_estado_postulacion == 3) {
       return res
-        .status(404)
+        .status(409)
         .json({ error: "La postulación ya fue rechazada anteriormente" });
     }
 
@@ -264,14 +264,14 @@ export const rechazarPostulacion = async (req, res) => {
     // Verificar si la postulación ya fue aceptada
     if (postulacion.id_estado_postulacion == 2) {
       return res
-        .status(404)
+        .status(409)
         .json({ error: "La postulación ya fue aceptada anteriormente" });
     }
 
     // Verificar si la postulación ya fue rechazada
     if (postulacion.id_estado_postulacion == 3) {
       return res
-        .status(404)
+        .status(409)
         .json({ error: "La postulación ya fue rechazada anteriormente" });
     }
 
@@ -366,6 +366,63 @@ export const getPostulacionesEmpleado = async (req, res) => {
         id_empleado: checkUser.id_usuario_rol,
         id_estado_postulacion: 1,
       },
+    });
+    res.json({
+      postulaciones,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Lista de contratos activos de un empleado
+export const getContratosActivos = async (req, res) => {
+  try {
+    const { id_empleado } = req.params;
+
+    const checkUser = await UsuarioRol.findOne({
+      where: {
+        id_usuario: id_empleado,
+        id_rol: 3,
+      },
+    });
+
+    if (!checkUser) {
+      return res
+        .status(404)
+        .json({ error: "El usuario seleccionado no es un empleado" });
+    }
+
+    const postulaciones = await Postulacion.findAll({
+      where: {
+        id_empleado: checkUser.id_usuario_rol,
+        id_estado_postulacion: 2,
+      },
+      include: [
+        {
+          model: Publicacion,
+          as: "publicacion",
+          attributes: [
+            "titulo",
+            "descripcion",
+          ],
+          include: [
+            {
+              model: UsuarioRol,
+              as: "empleador",
+              attributes: ["id_usuario"],
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuario",
+                  attributes: ["nombre", "apellido", "email"],
+                },
+              ],
+            },
+          ],
+        },
+        
+      ],
     });
     res.json({
       postulaciones,

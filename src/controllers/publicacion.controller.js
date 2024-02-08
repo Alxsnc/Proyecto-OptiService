@@ -243,7 +243,7 @@ export const deletePublicacion = async (req, res) => {
     }
 
     // Verificar si la publicación tiene postulaciones en estado Aceptada o Rechazada
-        const postulaciones = await Postulacion.findOne({
+    const postulaciones = await Postulacion.findOne({
       where: {
         id_publicacion: id_publicacion,
         id_estado_postulacion: [2, 3],
@@ -251,12 +251,10 @@ export const deletePublicacion = async (req, res) => {
     });
 
     if (postulaciones) {
-      return res
-        .status(404)
-        .json({
-          error:
-            "La publicación no puede ser eliminada porque tiene postulaciones en estado Aceptada o Rechazada",
-        });
+      return res.status(404).json({
+        error:
+          "La publicación no puede ser eliminada porque tiene postulaciones en estado Aceptada o Rechazada",
+      });
     } else {
       await Postulacion.destroy({
         where: {
@@ -269,9 +267,8 @@ export const deletePublicacion = async (req, res) => {
         where: { id_publicacion: id_publicacion },
       });
 
-      return res.status(200).json({ message: 'Operacón Exitosa!' });
+      return res.status(200).json({ message: "Operacón Exitosa!" });
     }
-    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -324,36 +321,53 @@ export const getPostulantesPorPublicacion = async (req, res) => {
       include: [
         {
           model: UsuarioRol,
-          as: 'empleado',
+          as: "empleado",
           include: [
             {
               model: Usuario,
-              as: 'usuario',
-              attributes: ['nombre', 'apellido', 'email'],
+              as: "usuario",
+              attributes: ["nombre", "apellido", "email"],
             },
           ],
         },
       ],
     });
 
-    const postulantesInfo = postulantes.map(postulacion => {
-      const empleado = postulacion.empleado;
-      const usuario = empleado.usuario;
-      return {
-        id_postulacion: postulacion.id_postulacion,
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        email: usuario.email,
-        id_estado_postulacion: postulacion.id_estado_postulacion,
-        // Puedes agregar más campos si es necesario
-      };
-    });
+    const postulantesInfo = postulantes
+      .filter((postulacion) => postulacion.id_estado_postulacion === 1)
+      .map((postulacion) => {
+        const empleado = postulacion.empleado;
+        const usuario = empleado.usuario;
+        return {
+          id_postulacion: postulacion.id_postulacion,
+          nombre: usuario.nombre,
+          apellido: usuario.apellido,
+          email: usuario.email,
+          id_estado_postulacion: postulacion.id_estado_postulacion,
+          // Puedes agregar más campos si es necesario
+        };
+      });
+
+    const postulantesAceptados = postulantes
+      .filter((postulacion) => postulacion.id_estado_postulacion === 2)
+      .map((postulacion) => {
+        const empleado = postulacion.empleado;
+        const usuario = empleado.usuario;
+        return {
+          id_postulacion: postulacion.id_postulacion,
+          nombre: usuario.nombre,
+          apellido: usuario.apellido,
+          email: usuario.email,
+          id_estado_postulacion: postulacion.id_estado_postulacion,
+          // Puedes agregar más campos si es necesario
+        };
+      });
 
     res.json({
       data: postulantesInfo,
+      aceptados: postulantesAceptados,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-

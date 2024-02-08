@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 
 import { UsuarioRol } from "./usuarioRol.model.js";
+import { Publicacion } from "./publicacion.model.js";
 
 export const Postulacion = sequelize.define(
   "postulaciones",
@@ -34,4 +35,5 @@ export const Postulacion = sequelize.define(
 );
 
 Postulacion.belongsTo(UsuarioRol, { foreignKey: 'id_empleado', as: 'empleado' });
+Postulacion.belongsTo(Publicacion, { foreignKey: 'id_publicacion', as: 'publicacion' });
 
