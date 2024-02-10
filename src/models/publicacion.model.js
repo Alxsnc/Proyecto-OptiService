@@ -3,6 +3,7 @@ import { sequelize } from "../database/database.js";
 
 import { UsuarioRol } from "./usuarioRol.model.js";
 
+
 export const Publicacion = sequelize.define(
   "publicaciones",
   {
@@ -42,6 +43,10 @@ export const Publicacion = sequelize.define(
     fecha_modificacion: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    calificado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

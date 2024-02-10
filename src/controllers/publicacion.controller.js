@@ -344,6 +344,7 @@ export const getPostulantesPorPublicacion = async (req, res) => {
           apellido: usuario.apellido,
           email: usuario.email,
           id_estado_postulacion: postulacion.id_estado_postulacion,
+          id_postulante: empleado.id_usuario_rol,
           // Puedes agregar más campos si es necesario
         };
       });
@@ -359,6 +360,8 @@ export const getPostulantesPorPublicacion = async (req, res) => {
           apellido: usuario.apellido,
           email: usuario.email,
           id_estado_postulacion: postulacion.id_estado_postulacion,
+          id_postulante: empleado.id_usuario_rol,
+          calificado: postulacion.calificado,
           // Puedes agregar más campos si es necesario
         };
       });

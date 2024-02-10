@@ -174,6 +174,7 @@ export const singIn = async (req, res) => {
       token = jwt.sign(
         {
           id_usuario: usuarioExistente.id_usuario,
+          id_usuario_rol: rolSeleccionado.id_usuario_rol,
           nombre: usuarioExistente.nombre,
           apellido: usuarioExistente.apellido,
           email: usuarioExistente.email,

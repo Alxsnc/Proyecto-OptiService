@@ -2,6 +2,7 @@ import { Publicacion } from "../models/publicacion.model.js";
 import { UsuarioRol } from "../models/usuarioRol.model.js";
 import { Postulacion } from "../models/postulacion.model.js";
 import { Usuario } from "../models/usuario.model.js";
+import { Calificacion } from "../models/calificacion.model.js";
 import { Op } from "sequelize";
 
 //Listar publicaciones activa (Para Empleados)
@@ -32,68 +33,6 @@ export const getPublicacionesActivas = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-// export const getPublicacionesActivas = async (req, res) => {
-//   try {
-//     const { id_usuario } = req.params;
-
-//     const publicaciones = await Publicacion.findAll({
-//       attributes: [
-//         'id_publicacion',
-//         'titulo',
-//         'descripcion',
-//         'pago',
-//         'id_categoria',
-//         'provincia',
-//         'ciudad',
-//       ],
-//       where: {
-//         id_estado_publicacion: 1,
-//       },
-//       include: [
-//         {
-//           model: UsuarioRol,
-//           as: "empleador",
-//           attributes: ['id_usuario'],
-//           where: {
-//             id_usuario: {
-//               [Op.not]: id_usuario,
-//             },
-//           },
-//           include: [
-//             {
-//               model: Usuario,
-//               attributes: ['nombre', 'apellido', 'email'],
-//               as: 'usuario', // Asegúrate de usar el nombre correcto de la relación
-//             },
-//           ],
-//         },
-//       ],
-//     });
-
-//     const data = publicaciones.map(publicacion => {
-//       return {
-//         id_publicacion: publicacion.id_publicacion,
-//         titulo: publicacion.titulo,
-//         descripcion: publicacion.descripcion,
-//         pago: publicacion.pago,
-//         id_categoria: publicacion.id_categoria,
-//         provincia: publicacion.provincia,
-//         ciudad: publicacion.ciudad,
-//         id_usuario: publicacion.empleador.usuario.id_usuario,
-//         nombre: publicacion.empleador.usuario.nombre,
-//         apellido: publicacion.empleador.usuario.apellido,
-//         email: publicacion.empleador.usuario.email,
-//       };
-//     });
-
-//     res.json({
-//       data,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
 
 //Listar publicaciones activas por categoria
 //TODO: Implementar filtro de usuario
@@ -402,10 +341,7 @@ export const getContratosActivos = async (req, res) => {
         {
           model: Publicacion,
           as: "publicacion",
-          attributes: [
-            "titulo",
-            "descripcion",
-          ],
+          attributes: ["titulo", "descripcion", "id_empleador", "calificado"],
           include: [
             {
               model: UsuarioRol,
@@ -421,11 +357,95 @@ export const getContratosActivos = async (req, res) => {
             },
           ],
         },
-        
       ],
     });
     res.json({
       postulaciones,
+    });
+    console.log(postulaciones);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Lista de contratos cerrados de un empleado
+export const getContratosCerrados = async (req, res) => {
+  try {
+    const { id_empleado } = req.params;
+
+    const checkUser = await UsuarioRol.findOne({
+      where: {
+        id_usuario: id_empleado,
+        id_rol: 3,
+      },
+    });
+
+    if (!checkUser) {
+      return res
+        .status(404)
+        .json({ error: "El usuario seleccionado no es un empleado" });
+    }
+
+    const postulaciones = await Postulacion.findAll({
+      where: {
+        id_empleado: checkUser.id_usuario_rol,
+        id_estado_postulacion: 2,
+      },
+      include: [
+        {
+          model: Publicacion,
+          as: "publicacion",
+          attributes: ["titulo", "descripcion", "id_empleador", "calificado"],
+          include: [
+            {
+              model: UsuarioRol,
+              as: "empleador",
+              attributes: ["id_usuario"],
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuario",
+                  attributes: ["nombre", "apellido", "email"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const contratosCerrados = postulaciones
+      .filter((postulacion) => postulacion.publicacion.calificado == true)
+      .filter((postulacion) => postulacion.calificado == true)
+      .map((postulacion) => postulacion);
+
+    const calificaciones = await Calificacion.findAll({
+      where: {
+        id_usuario_calificado: checkUser.id_usuario_rol,
+      },
+    });
+
+
+    // const data = contratosCerrados.forEach((contrato) => {
+    //   // Buscamos la calificación correspondiente en el array de calificaciones
+    //   const calificacion = calificaciones.find(
+    //     (calif) => calif.id_publicacion === contrato.id_publicacion
+    //   );
+
+    //   // Si encontramos la calificación, la agregamos al objeto contrato
+    //   if (calificacion) {
+    //     contrato.puntuacion = calificacion.puntuacion;
+    //     contrato.comentario = calificacion.comentario;
+    //     console.log('Here' ,contrato.puntuacion);
+    //   }
+    // });
+
+    // Ahora `contratosCerrados` contiene los campos `puntuacion` y `comentario` agregados
+    
+
+    res.json({
+      contratosCerrados ,
+      calificaciones ,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

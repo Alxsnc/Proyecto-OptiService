@@ -3,7 +3,34 @@ import { Publicacion } from "../models/publicacion.model.js";
 import { Postulacion } from "../models/postulacion.model.js";
 
 //Generar calificacion
-export const generarCalificacion = async (req, res) => {
+export const generarCalificacionEmpleado = async (req, res) => {
+  try {
+    const { id_publicacion, id_postulacion, puntuacion, comentario, id_usuario_calificador, id_usuario_calificado } = req.body;
+
+    const calificacion = await Calificacion.create({
+      id_publicacion,
+      puntuacion,
+      comentario,
+      id_usuario_calificador,
+      id_usuario_calificado,
+    });
+    
+    await Postulacion.update(
+      { calificado: true },
+      { where: { id_postulacion } } 
+    );
+
+    res.status(201).json({
+      message: "Se ha generado la calificacion exitosamente",
+      data: calificacion,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const generarCalificacionEmpleador = async (req, res) => {
   try {
     const { id_publicacion, puntuacion, comentario, id_usuario_calificador, id_usuario_calificado } = req.body;
 
@@ -14,6 +41,12 @@ export const generarCalificacion = async (req, res) => {
       id_usuario_calificador,
       id_usuario_calificado,
     });
+
+    await Publicacion.update(
+      { calificado: true },
+      { where: { id_publicacion } } 
+    );
+    
 
     res.status(201).json({
       message: "Se ha generado la calificacion exitosamente",

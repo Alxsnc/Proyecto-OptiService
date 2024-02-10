@@ -25,7 +25,10 @@ export const Postulacion = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    
+    calificado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     timestamps: true,
@@ -36,4 +39,5 @@ export const Postulacion = sequelize.define(
 
 Postulacion.belongsTo(UsuarioRol, { foreignKey: 'id_empleado', as: 'empleado' });
 Postulacion.belongsTo(Publicacion, { foreignKey: 'id_publicacion', as: 'publicacion' });
+
 

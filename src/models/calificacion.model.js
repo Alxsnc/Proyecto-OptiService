@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
+import { Publicacion } from "./publicacion.model.js";
 
 export const Calificacion = sequelize.define(
   "calificaciones",
@@ -35,3 +36,5 @@ export const Calificacion = sequelize.define(
     createdAt: 'fecha_calificacion',
   }
 );
+
+Calificacion.belongsTo(Publicacion, { foreignKey: 'id_publicacion', as: 'publicacion' })
