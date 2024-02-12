@@ -23,7 +23,7 @@ publicacionRoutes.put('/modificarPublicacion/:id', publicacionControllers.update
 publicacionRoutes.delete('/eliminarPublicacion/:id', publicacionControllers.deletePublicacion);
 
 //LISTA DE POSTULANTES
-publicacionRoutes.get('/listaPostulantes/:id_publicacion', publicacionControllers.getPostulantesPorPublicacion); // Obtener postulantes por publicacion
+publicacionRoutes.get('/listaPostulantes/', publicacionControllers.getPostulantesPorPublicacion); // Obtener postulantes por publicacion
 
 // Prefijo de las rutas
 router.use('/api/publicaciones', publicacionRoutes);

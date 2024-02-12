@@ -5,6 +5,7 @@ import { Postulacion } from "../models/postulacion.model.js";
 import { Usuario } from "../models/usuario.model.js";
 
 import promedioCalif from "../helpers/promedioCalificaciones.js";
+import { Calificacion } from "../models/calificacion.model.js";
 
 
 //Crear Publicacion
@@ -315,7 +316,7 @@ export const getPublicacionesActivasPorCategoria = async (req, res) => {
 //Lista de postulantes en una publicacion
 export const getPostulantesPorPublicacion = async (req, res) => {
   try {
-    const { id_publicacion } = req.params;
+    const { id_publicacion, id_empleador } = req.query;
 
     const postulantes = await Postulacion.findAll({
       where: {
@@ -334,6 +335,14 @@ export const getPostulantesPorPublicacion = async (req, res) => {
           ],
         },
       ],
+    });
+
+    const calificaciones = await Calificacion.findAll({
+      where:{
+        id_publicacion: id_publicacion,
+        id_usuario_calificado: id_empleador
+        
+      }
     });
 
     const postulantesInfo = await Promise.all(postulantes
@@ -366,6 +375,8 @@ export const getPostulantesPorPublicacion = async (req, res) => {
         // Obtener promedio de calificaciones
         const promedio = await promedioCalif(empleado.id_usuario_rol);
 
+
+
         return {
           id_postulacion: postulacion.id_postulacion,
           nombre: usuario.nombre,
@@ -374,15 +385,18 @@ export const getPostulantesPorPublicacion = async (req, res) => {
           id_estado_postulacion: postulacion.id_estado_postulacion,
           id_postulante: empleado.id_usuario_rol,
           calificado: postulacion.calificado,
-          promedio_calificaciones: promedio, 
+          promedio_calificaciones: promedio,
         };
       }));
 
     res.json({
       data: postulantesInfo,
       aceptados: postulantesAceptados,
+      calificaciones: calificaciones
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+

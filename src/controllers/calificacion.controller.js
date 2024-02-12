@@ -1,6 +1,7 @@
 import { Calificacion } from "../models/calificacion.model.js";
 import { Publicacion } from "../models/publicacion.model.js";
 import { Postulacion } from "../models/postulacion.model.js";
+import { where } from "sequelize";
 
 //Generar calificacion
 export const generarCalificacionEmpleado = async (req, res) => {
@@ -42,9 +43,12 @@ export const generarCalificacionEmpleador = async (req, res) => {
       id_usuario_calificado,
     });
 
-    await Publicacion.update(
-      { calificado: true },
-      { where: { id_publicacion } } 
+    await Postulacion.update(
+      { calificacion_done: true },
+      { where: { 
+        id_publicacion,
+        id_empleado: id_usuario_calificador
+      } } 
     );
     
 
@@ -57,7 +61,6 @@ export const generarCalificacionEmpleador = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 //Verificar si el empleador califico a todos los postulantes para cerrar la publicacion
 export const verificarYCerrarPublicacion = async (req, res) => {
@@ -74,23 +77,22 @@ export const verificarYCerrarPublicacion = async (req, res) => {
       where: {
         id_publicacion,
         id_estado_postulacion: 2,
+        calificado: true,
+        calificacion_done: true,
       },
     });
 
-    const calificaciones = await Calificacion.findAll({
-      where: {
-        id_publicacion,
-      },
-    });
+    if (postulaciones) {
+      await Publicacion.update(
+        { id_estado_publicacion: 3,
+        calificado: true },
+        { where: { id_publicacion } }
+      );
 
-    if (postulaciones.length === calificaciones.length) {
-      // Cambiar el estado de la publicación a "cerrada"
-      await publicacion.update({ id_estado_publicacion: 3 }); //La publicacion pasa a estado cerrado (3)
-
-      return res.status(200).json({ message: "Todos los postulantes han sido calificados por el empleador. La publicación ha sido cerrada." });
+      return res.status(200).json({ message: "Todos los involucrados han sido calificados. La publicación ha sido cerrada." });
     }
 
-    return res.status(400).json({ message: "Aún hay postulantes que no han sido calificados por el empleador. No se puede cerrar la publicación." });
+    return res.status(400).json({ message: "Existen involucrados que no han sido calificados. No se puede cerrar la publicación." });
   } catch (error) {
     res.status(500).json({ error: "Ocurrió un error al procesar la solicitud." });
   }

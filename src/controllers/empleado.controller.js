@@ -43,7 +43,6 @@ export const getPublicacionesActivas = async (req, res) => {
 };
 
 //Listar publicaciones activas por categoria
-//TODO: Implementar filtro de usuario
 export const getPublicacionesActivasPorCategoria = async (req, res) => {
   try {
     const { id_categoria } = req.params;

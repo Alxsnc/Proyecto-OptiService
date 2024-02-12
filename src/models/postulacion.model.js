@@ -29,6 +29,10 @@ export const Postulacion = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    calificacion_done: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     timestamps: true,
