@@ -98,7 +98,7 @@ export const verificarYCerrarPublicacion = async (req, res) => {
 
 
 //Obtener calificaciones de un usuario
-export const obtenerCalificaciones = async (req, res) => {
+export const promedioCalificaciones = async (req, res) => {
   try {
     const { id_usuario } = req.params;
 
@@ -108,7 +108,14 @@ export const obtenerCalificaciones = async (req, res) => {
       },
     });
 
-    res.json({ data: calificaciones });
+    let total = 0;
+    for (const calificacion of calificaciones) {
+      total += calificacion.puntuacion;
+    }
+
+    const promedio = total / calificaciones.length;
+
+    res.json({ data: promedio });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

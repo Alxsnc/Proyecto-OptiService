@@ -23,7 +23,15 @@ export const getPublicacionesActivas = async (req, res) => {
               [Op.not]: id_usuario,
             },
           },
+          include: [
+            {
+              model: Usuario,
+              as: "usuario",
+              attributes: ["nombre", "apellido", "email"],
+            },
+          ],
         },
+
       ],
     });
     res.json({
@@ -424,25 +432,6 @@ export const getContratosCerrados = async (req, res) => {
         id_usuario_calificado: checkUser.id_usuario_rol,
       },
     });
-
-
-    // const data = contratosCerrados.forEach((contrato) => {
-    //   // Buscamos la calificación correspondiente en el array de calificaciones
-    //   const calificacion = calificaciones.find(
-    //     (calif) => calif.id_publicacion === contrato.id_publicacion
-    //   );
-
-    //   // Si encontramos la calificación, la agregamos al objeto contrato
-    //   if (calificacion) {
-    //     contrato.puntuacion = calificacion.puntuacion;
-    //     contrato.comentario = calificacion.comentario;
-    //     console.log('Here' ,contrato.puntuacion);
-    //   }
-    // });
-
-    // Ahora `contratosCerrados` contiene los campos `puntuacion` y `comentario` agregados
-    
-
     res.json({
       contratosCerrados ,
       calificaciones ,

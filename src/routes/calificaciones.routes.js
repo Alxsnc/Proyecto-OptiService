@@ -15,8 +15,8 @@ calificacionesRoutes.post('/calificarEmpleador', calificacionesControllers.gener
 //Control de calificaciones empleador to empleado
 calificacionesRoutes.put('/verificarYCerrar/:id_publicacion', calificacionesControllers.verificarYCerrarPublicacion); 
 
-//Obtener calificaciones de un usuario
-calificacionesRoutes.get('/obtenerCalificaciones/:id_usuario', calificacionesControllers.obtenerCalificaciones);
+//Obtener promedio de calificaciones de un usuario
+calificacionesRoutes.get('/promedioCalificaciones/:id_usuario', calificacionesControllers.promedioCalificaciones);
 
 //prefijos de las rutas
 router.use('/api/calificaciones', calificacionesRoutes);
