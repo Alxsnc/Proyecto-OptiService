@@ -4,6 +4,9 @@ import { UsuarioRol } from "../models/usuarioRol.model.js";
 import { Postulacion } from "../models/postulacion.model.js";
 import { Usuario } from "../models/usuario.model.js";
 
+import promedioCalif from "../helpers/promedioCalificaciones.js";
+
+
 //Crear Publicacion
 export const createPublicacion = async (req, res) => {
   try {
@@ -333,27 +336,15 @@ export const getPostulantesPorPublicacion = async (req, res) => {
       ],
     });
 
-    const postulantesInfo = postulantes
+    const postulantesInfo = await Promise.all(postulantes
       .filter((postulacion) => postulacion.id_estado_postulacion === 1)
-      .map((postulacion) => {
+      .map(async (postulacion) => {
         const empleado = postulacion.empleado;
         const usuario = empleado.usuario;
-        return {
-          id_postulacion: postulacion.id_postulacion,
-          nombre: usuario.nombre,
-          apellido: usuario.apellido,
-          email: usuario.email,
-          id_estado_postulacion: postulacion.id_estado_postulacion,
-          id_postulante: empleado.id_usuario_rol,
-          // Puedes agregar más campos si es necesario
-        };
-      });
 
-    const postulantesAceptados = postulantes
-      .filter((postulacion) => postulacion.id_estado_postulacion === 2)
-      .map((postulacion) => {
-        const empleado = postulacion.empleado;
-        const usuario = empleado.usuario;
+        // Obtener promedio de calificaciones
+        const promedio = await promedioCalif(empleado.id_usuario_rol);
+
         return {
           id_postulacion: postulacion.id_postulacion,
           nombre: usuario.nombre,
@@ -362,9 +353,30 @@ export const getPostulantesPorPublicacion = async (req, res) => {
           id_estado_postulacion: postulacion.id_estado_postulacion,
           id_postulante: empleado.id_usuario_rol,
           calificado: postulacion.calificado,
-          // Puedes agregar más campos si es necesario
+          promedio_calificaciones: promedio, 
         };
-      });
+      }));
+
+    const postulantesAceptados = await Promise.all(postulantes
+      .filter((postulacion) => postulacion.id_estado_postulacion === 2)
+      .map(async (postulacion) => {
+        const empleado = postulacion.empleado;
+        const usuario = empleado.usuario;
+
+        // Obtener promedio de calificaciones
+        const promedio = await promedioCalif(empleado.id_usuario_rol);
+
+        return {
+          id_postulacion: postulacion.id_postulacion,
+          nombre: usuario.nombre,
+          apellido: usuario.apellido,
+          email: usuario.email,
+          id_estado_postulacion: postulacion.id_estado_postulacion,
+          id_postulante: empleado.id_usuario_rol,
+          calificado: postulacion.calificado,
+          promedio_calificaciones: promedio, 
+        };
+      }));
 
     res.json({
       data: postulantesInfo,

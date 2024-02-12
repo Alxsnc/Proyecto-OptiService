@@ -115,7 +115,11 @@ export const promedioCalificaciones = async (req, res) => {
 
     const promedio = total / calificaciones.length;
 
-    res.json({ data: promedio });
+    if (promedio === null || promedio === undefined || isNaN(promedio)) {
+      promedio = 0;
+    }
+
+    res.json({ data: promedio.toFixed(1) });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
