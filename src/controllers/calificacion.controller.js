@@ -69,6 +69,12 @@ export const verificarYCerrarPublicacion = async (req, res) => {
 
     const publicacion = await Publicacion.findByPk(id_publicacion);
 
+    const calificaciones = await Calificacion.findAll({
+      where: {
+        id_publicacion,
+      },
+    });
+
     if (!publicacion) {
       return res.status(400).json({ message: "La publicación no existe." });
     }
@@ -77,12 +83,10 @@ export const verificarYCerrarPublicacion = async (req, res) => {
       where: {
         id_publicacion,
         id_estado_postulacion: 2,
-        calificado: true,
-        calificacion_done: true,
       },
     });
 
-    if (postulaciones.length > 0) {
+    if (postulaciones.length > 0 && calificaciones.length > 0 && (calificaciones.length === (postulaciones.length * 2))) {
       await Publicacion.update(
         { id_estado_publicacion: 3,
         calificado: true },
