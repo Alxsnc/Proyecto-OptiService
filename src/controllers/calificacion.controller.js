@@ -82,7 +82,7 @@ export const verificarYCerrarPublicacion = async (req, res) => {
       },
     });
 
-    if (postulaciones) {
+    if (postulaciones.length > 0) {
       await Publicacion.update(
         { id_estado_publicacion: 3,
         calificado: true },
